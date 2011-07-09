@@ -1,0 +1,44 @@
+                                README
+
+                Information about the LSI application
+
+LSI		A collection of scripts and programs that allow 
+                for the gathering and reporting of Linux
+		systems information.
+
+LSI(Linux Systems Information) includes tools for gathering
+important aspects of managed computers systems. This includes
+hostname, network interface settings, hardware information, 
+software information. 
+
+
+Contents:
+  
+   README		This file.
+
+   INSTALL		Installation instructions. Including system 
+                        requirements and dependencies.
+
+   LICENSE		GPLv3 License.
+
+   TODO			Works in progress or not in progress.
+
+   docs			Extra documentation for LSI
+
+   src  		Various client scripts and programs used to 
+			gather specific information about that clients
+			system. 
+
+System Requirements:
+
+Operating systems that should work: Ubuntu, Debian, Red Hat Enterprise Linux, CentOS
+
+Dependencies:
+
+Client -
+  Standard utilities such as perl, awk ,sed, grep, libxml2 (xmllint), libxslt (xsltproc) etc. (so basically a working system).
+
+Known Issues:
+
+-hostid may not be properly populated as this was originally intended for Dell
+-hardware results maybe be inacurrate, read man dmidecode for more information
