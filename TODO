@@ -1,17 +1,6 @@
-1. Create command line interface
-2. Document missing dependencies 
-3. Add the following:
-
-Serial Number
-Model Number
-Part Number
-Manufacturer
-NICS (Manufacturer, Ports, FRU)
-HBAS (Manufacturer, Ports, FRU)
-Disk Free Space
-PSU ( count, specs)
-
-4. Santize XML data
+1. Document dependencies 
+2. Add the following:
+3. Santize XML data
 &lt;	<	less than
 &gt;	>	greater than
 &amp;	&	ampersand 

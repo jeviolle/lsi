@@ -2,11 +2,11 @@
 
                 Information about the LSI application
 
-LSI		A collection of scripts and programs that allow 
+LSI		A collection of scripts that allow 
                 for the gathering and reporting of Linux
 		systems information.
 
-LSI(Linux Systems Information) includes tools for gathering
+LSI(Linux Systems Information) includes scripts for reporting
 important aspects of managed computers systems. This includes
 hostname, network interface settings, hardware information, 
 software information. 
@@ -25,9 +25,7 @@ Contents:
 
    docs			Extra documentation for LSI
 
-   src  		Various client scripts and programs used to 
-			gather specific information about that clients
-			system. 
+   src  		Various scripts used to gather specific information 
 
 System Requirements:
 
