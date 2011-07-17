@@ -1,8 +1,2 @@
-1. Document dependencies 
-2. Add the following:
-3. Santize XML data
-&lt;	<	less than
-&gt;	>	greater than
-&amp;	&	ampersand 
-&apos;	'	apostrophe
-&quot;	"	quotation mark
+- Document dependencies 
+- Create script to parse XML
