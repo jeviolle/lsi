@@ -78,6 +78,7 @@ if ( $^O ne "linux" ) {
 # vars
 my %opts;
 my %HoH;
+my $host = hostname;
 
 # get command line options and display usage for no, help, or bad options
 getopts('abcdhHmnpP?xs' => \%opts) or die pod2usage(3);
@@ -199,7 +200,6 @@ sub cpuinfo {
 # hopefully the lsb_release command on red-hack provides the same
 # information as normal linux
 sub hostinfo {
-    my $host = hostname;
     my $vendor=`lsb_release -i | awk '{print \$3}'`;
     my $version=`lsb_release -r | awk '{print \$2}'`;
     my $kernel=`uname -r`;
@@ -215,7 +215,6 @@ sub hostinfo {
 
     chomp($host,$vendor,$version,$kernel,$arch,$numa);
 
-    $HoH{'host'}{'hostname'} = $host;
     $HoH{'host'}{'vendor'} = $vendor;
     $HoH{'host'}{'version'} = $version;
     $HoH{'host'}{'kernel'} = $kernel;
@@ -512,7 +511,7 @@ sub printXML() {
     my $format = "XML";
 
     print "<?xml version=\"1.0\" encoding='UTF-8'?>\n";
-    print "<systeminfo>\n";
+    print '<systeminfo host="' . $host . '">' . "\n";
     foreach my $key (sort keys %HoH) {
     print "  <$key>\n";
     if (ref($HoH{$key}) eq "HASH") {
@@ -572,6 +571,8 @@ sub printCSV() {
     my $format = "CSV";
 
     # print csv header
+    print '"host",';
+
     foreach my $yek ( sort keys %HoH ) {
         foreach my $yek2 ( sort keys %{$HoH{$yek}} ) {
             if ($yek2 =~ /\d+/) {
@@ -585,6 +586,7 @@ sub printCSV() {
     }
 
     print "\n";
+    print '"' . $host . '",';
 
     foreach my $key (sort keys %HoH) {
     if (ref($HoH{$key}) eq "HASH") {
