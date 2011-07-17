@@ -483,9 +483,33 @@ sub main($) {
     if ( $infoArg eq 'P' ) { pkginfo; }
 }
 
+# sanitize data for output
+# &lt;    <   less than
+# &gt;    >   greater than
+# &amp;   &   ampersand 
+# &apos;  '   apostrophe
+# &quot;  "   quotation mark
+sub sanitizeData($$) {
+    my $data = $_[0];
+    my $format = $_[1];
+
+    if ( $format eq "XML" ) {
+        $data =~ s/\</\&lt\;/g;
+        $data =~ s/\>/\&gt\;/g;
+        $data =~ s/\'/\&apos\;/g;
+        $data =~ s/\"/\&quot\;/g;
+    } elsif ( $format eq "CSV" ) {
+        $data =~ s/\"//g;
+    }
+
+    return $data;
+}
+
 # return the data
 # expected and defined hash of hashes depth is 3
 sub printXML() {
+    my $format = "XML";
+
     print "<?xml version=\"1.0\" encoding='UTF-8'?>\n";
     print "<systeminfo>\n";
     foreach my $key (sort keys %HoH) {
@@ -509,7 +533,7 @@ sub printXML() {
                     if (ref($HoH{$key}{$key2}{$key3}) ne "HASH") {
                         # handle undefined element output
                         if (defined($HoH{$key}{$key2}{$key3})) { 
-                            print "      <$key3>$HoH{$key}{$key2}{$key3}</$key3>\n";
+                            print "      <$key3>" . sanitizeData($HoH{$key}{$key2}{$key3},$format) . "</$key3>\n";
                         } else {
                             print "      <$key3>empty</$key3>\n";
                         }
@@ -519,7 +543,7 @@ sub printXML() {
                 # if the element wasn't a hash we expect a scalar 
                 # so print
                 if (defined($HoH{$key}{$key2})) {
-                    print "    <$key2>$HoH{$key}{$key2}</$key2>\n";
+                    print "    <$key2>" . sanitizeData($HoH{$key}{$key2},$format) . "</$key2>\n";
                 } else {
                     print "    <$key2>empty</$key2>\n";
                 }
@@ -544,15 +568,17 @@ sub printXML() {
 
 # return the data is csv format
 sub printCSV() {
+    my $format = "CSV";
+
     # print csv header
     foreach my $yek ( sort keys %HoH ) {
         foreach my $yek2 ( sort keys %{$HoH{$yek}} ) {
             if ($yek2 =~ /\d+/) {
                 foreach my $yek3 ( sort keys %{$HoH{$yek}{$yek2}} ) {
-                    print $yek . "_" . $yek3 . ",";
+                    print '"' . $yek . "_" . $yek3 . '",';
                 }   
             } else {
-                print $yek . "_" . $yek2 . ",";
+                print '"' . $yek . "_" . $yek2 . '",';
             }
         }
     }
@@ -570,9 +596,9 @@ sub printCSV() {
                     if (ref($HoH{$key}{$key2}{$key3}) ne "HASH") {
                         # handle undefined element output
                         if (defined($HoH{$key}{$key2}{$key3})) { 
-                            print "$HoH{$key}{$key2}{$key3},";
+                            print '"' . sanitizeData($HoH{$key}{$key2}{$key3},$format) . '",';
                         } else {
-                            print "empty,";
+                            print '"empty",';
                         }
                     }
                 }
@@ -580,9 +606,9 @@ sub printCSV() {
                 # if the element wasn't a hash we expect a scalar 
                 # so print
                 if (defined($HoH{$key}{$key2})) {
-                    print "$HoH{$key}{$key2},";
+                    print '"' . sanitizeData($HoH{$key}{$key2},$format) . '",';
                 } else {
-                    print "empty,";
+                    print '"empty",';
                 }
             }
         }
