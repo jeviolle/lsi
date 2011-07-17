@@ -188,6 +188,7 @@ sub cpuinfo {
 
         if ( /(vendor_id|model name|cpu MHz|cache size)\s+:\s+(.+)/ ) { 
             my ( $key, $value ) = ($1, $2);
+            $key =~ s/\s/_/;
             $HoH{'cpus'}{$count}{$key} = $value;
         }
     }
