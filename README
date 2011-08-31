@@ -34,7 +34,7 @@ Operating systems that should work: Ubuntu, Debian, Red Hat Enterprise Linux, Ce
 Dependencies:
 
 Client -
-  Standard utilities such as perl, awk ,sed, grep, libxml2 (xmllint), libxslt (xsltproc) etc. (so basically a working system).
+  Standard utilities such as xinetd, perl, awk ,sed, grep, libxml2 (xmllint), libxslt (xsltproc) etc. (so basically a working system).
 
 Known Issues:
 

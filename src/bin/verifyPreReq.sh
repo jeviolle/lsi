@@ -32,8 +32,7 @@ export PATH
 OS=`uname -s | tr [A-Z] [a-z]`
 
 # attempt to find required binaries and prompt if missing
-GENCMDS="perl grep egrep sed awk wc head tail tr cut ifconfig uname hostname cat xmllint"
-LINUXCMDS="dmidecode lsb_release numactl hdparm fdisk udevinfo lspci"
+CMDS="perl grep egrep sed awk wc head tail tr cut ifconfig uname hostname cat xmllint dmidecode lsb_release numactl hdparm fdisk udevinfo lspci tee"
 
 # exit on error
 exitOnError() {
@@ -79,8 +78,7 @@ echo "###########################################"
 # the operating system type
 case "$OS" in
    'linux' )
-            find_commands "$GENCMDS"
-            find_commands "$LINUXCMDS"
+            find_commands "$CMDS"
 
             which rpm > /dev/null 2>&1
             RPMRC="$?"
@@ -92,6 +90,25 @@ case "$OS" in
                 exitOnError
             else
                 echo "Checking for rpm|dpkg-query ... found"
+                if [ "$RPMRC" -eq 0 ];then
+                    rpm -q xinetd > /dev/null 2>&1
+                    if [ "$?" = 0 ];then
+                      echo "Checking for xinetd ... found"
+                    else
+                      echo "Checking for xinetd ... not found"
+                      exitOnError
+                    fi
+                fi
+
+                if [ "$DPKGRC" -eq 0 ];then
+                    dpkg-query -l xinetd > /dev/null 2>&1
+                    if [ "$?" = 0 ];then
+                      echo "Checking for xinetd ... found"
+                    else
+                      echo "Checking for xinetd ... not found"
+                      exitOnError
+                    fi
+                fi
             fi
 
             ;;
