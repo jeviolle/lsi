@@ -118,6 +118,13 @@ echo
 mkdir -p $prefix
 cp -Rv $CWD/src/* $prefix
 
+echo 
+echo "Updating default LSI configurations with the new install"
+echo "location."
+REPLACE=$(printf "%s\n" "$prefix" | sed 's/[][\.*^$/]/\\&/g')
+sed -i -e "s/PREFIX/$REPLACE/g" $prefix/etc/stunnel/*.conf
+sed -i -e "s/PREFIX/$REPLACE/g" $prefix/share/doc/xinetd-example
+
 if [ -f /etc/xinetd.d/lsi ];then
   echo
   echo "Backing up existing /etc/xinetd.d/lsi"

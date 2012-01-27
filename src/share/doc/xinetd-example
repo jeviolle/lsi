@@ -1,11 +1,9 @@
-service lsi
 {
 socket_type = stream
 protocol = tcp
 wait = no
 user = root
-server = /usr/local/lsi/bin/lsi.pl
-server_args = -a -x
+server = /usr/sbin/stunnel
+server_args = PREFIX/etc/stunnel/server.conf
 instances = 1
 }
-

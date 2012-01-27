@@ -32,7 +32,7 @@ export PATH
 OS=`uname -s | tr [A-Z] [a-z]`
 
 # attempt to find required binaries and prompt if missing
-CMDS="perl grep egrep sed awk wc head tail tr cut ifconfig uname hostname cat xmllint dmidecode lsb_release numactl hdparm fdisk udevinfo lspci tee"
+CMDS="perl grep egrep sed awk wc head tail tr cut ifconfig uname hostname cat xmllint dmidecode lsb_release numactl hdparm fdisk lspci tee"
 
 # exit on error
 exitOnError() {
@@ -79,6 +79,16 @@ echo "###########################################"
 case "$OS" in
    'linux' )
             find_commands "$CMDS"
+
+            which udevinfo > /dev/null 2>&1
+            UDEVINFO="$?"
+            which udevadm > /dev/null 2>&1
+            UDEVADM="$?"
+
+            if [ "$UDEVINFO" -ne 0 -a "$UDEVADM" -ne 0 ];then
+                echo "Checking for udevinfo|udevadm ... not found"
+                exitOnError
+            fi
 
             which rpm > /dev/null 2>&1
             RPMRC="$?"

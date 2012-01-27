@@ -166,6 +166,7 @@ sub meminfo {
     }
     close(DMI);
 
+    chomp($mbperslot);
     $HoH{'memory'}{'mbperslot'} = $mbperslot;
     $HoH{'memory'}{'slots'} = $memslots;
     $HoH{'memory'}{'maximum'} = $maxmem;
@@ -226,7 +227,7 @@ sub hostinfo {
 sub diskinfo {
 
     # gather storage and disk information
-    my $diskcount=`fdisk -l 2>/dev/null | grep ^Disk | wc -l`;
+    my $diskcount=`fdisk -l 2>/dev/null | grep -v mapper | grep "^Disk /" | wc -l`;
 
     chomp($diskcount);
     $HoH{'disks'}{'count'} = $diskcount;
@@ -234,7 +235,7 @@ sub diskinfo {
     my ($model, $disk, $size, $interface, $count);
     open(FDISK, "fdisk -l 2> /dev/null |") or die "Failed to execute fdisk: $!\n";
         while (<FDISK>) {
-            if (/(\/\w+\/\w+)\:\s+(\d+\s+\w+)/) {
+            if (/(\/\w+\/\w+)\:\s+(\d+.+\w+)\,/) {
                 $disk = $1;
                 $size = $2;
                 $count += 1;
@@ -247,13 +248,24 @@ sub diskinfo {
                     }
                 close(HDPARM);
 
-                open(IFACE, "udevinfo -q symlink -n $disk|") or die "Failed to execute udevinfo: $!\n";
-                    while (<IFACE>) {
-                        if (/disk\/by-path\/\w+-\d+:\d+:\d+\.\d+-(\w+)-\d+:\d+/) {
-                            my $interface = $1;
+                my $interface;
+                if ( -e '/sbin/udevadm' ) {
+                    open(IFACE, "udevadm info -q symlink -n $disk|") or die "Failed to execute udevinfo: $!\n";
+                        while (<IFACE>) {
+                            if (/disk\/by-path\/\w+-\d+:\d+:\d+\.\d+-(\w+)-\d+:\d+/) {
+                                $interface = $1;
+                            }
                         }
-                    }
-                close(IFACE);
+                    close(IFACE);
+                } else {
+                    open(IFACE, "udevinfo -q symlink -n $disk|") or die "Failed to execute udevinfo: $!\n";
+                        while (<IFACE>) {
+                            if (/disk\/by-path\/\w+-\d+:\d+:\d+\.\d+-(\w+)-\d+:\d+/) {
+                                $interface = $1;
+                            }
+                        }
+                    close(IFACE);
+                }
 
             $HoH{'disks'}{$count}{'device'} = $disk;
             $HoH{'disks'}{$count}{'model'} = $model;
