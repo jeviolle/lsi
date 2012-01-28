@@ -131,6 +131,9 @@ sub meminfo {
     # shane style 
     open(DMI, "dmidecode -t 17|") or die "Failed to run dmidecode: $!\n";
 
+    # set default count
+    $count=1;
+
     # read the ouput of the command
     while (defined (my $line = <DMI>)) {
 
@@ -156,10 +159,11 @@ sub meminfo {
             if ( $line =~ /\cI(Array Handle|Size|Locator|Speed|Form Factor):\s*(.*)$/ ) {
                 my ($key, $value) = ($1, $2);
                 if ( $key =~ /Array Handle/ ) { 
-                    $count=1;
+                    $count++;
                 } else {
                     # Locator,Size,Speed,Form Factor
-                    $HoH{'memory'}{$count}{$key} = $value;
+                    if ( $key =~ /Form Factor/ ) { $key = "form"; }
+                    $HoH{'memory'}{$count}{lc($key)} = $value;
                 }
             }
         } 
@@ -167,6 +171,7 @@ sub meminfo {
     close(DMI);
 
     chomp($mbperslot);
+    chomp($memslots);
     $HoH{'memory'}{'mbperslot'} = $mbperslot;
     $HoH{'memory'}{'slots'} = $memslots;
     $HoH{'memory'}{'maximum'} = $maxmem;
