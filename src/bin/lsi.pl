@@ -511,7 +511,7 @@ sub sanitizeData($$) {
     my $format = $_[1];
 
     if ( !defined($data) ) { $data = "empty"; }
-    if ( $data =~ / / ) { $data = "empty"; }
+    if ( $data eq " " ) { $data = "empty"; }
 
     if ( $format eq "XML" ) {
         $data =~ s/\</\&lt\;/g;
