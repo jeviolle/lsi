@@ -392,11 +392,11 @@ sub rpmparse {
             
             # check the line for the required field
             if ( $line =~ /^(Package|Version|Release|Architecture|Maintainer|Description|InstallDate):\s+(.*)$/ ) {
-                my ($key, $value) = ($1, $2);
-                if ( $key =~ /Package/ ) { 
+                my ($key, $value) = (lc($1), $2);
+                if ( $key =~ /package/ ) { 
                     $count++;
                     $HoH{'packages'}{$count}{$key} = $value;
-                } elsif ( $key =~ /InstallDate/ ) {
+                } elsif ( $key =~ /installdate/ ) {
                     my ($dow, $day, $month, $year, $time) = split(" ",$value);
                     my $mon = $month2num{ lc substr($month, 0, 3) };
                     $HoH{'packages'}{$count}{$key} = "$year-$mon-$day $time";
