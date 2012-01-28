@@ -510,6 +510,9 @@ sub sanitizeData($$) {
     my $data = $_[0];
     my $format = $_[1];
 
+    if ( !defined($data) ) { $data = "empty"; }
+    if ( $data =~ / / ) { $data = "empty"; }
+
     if ( $format eq "XML" ) {
         $data =~ s/\</\&lt\;/g;
         $data =~ s/\>/\&gt\;/g;
@@ -519,10 +522,10 @@ sub sanitizeData($$) {
         $data =~ s/\"//g;
     }
 
+    # return data and fix blank data
     return $data;
 }
 
-# return the data
 # expected and defined hash of hashes depth is 3
 sub printXML() {
     my $format = "XML";
@@ -549,21 +552,13 @@ sub printXML() {
                     # check if the element is a hash
                     if (ref($HoH{$key}{$key2}{$key3}) ne "HASH") {
                         # handle undefined element output
-                        if (defined($HoH{$key}{$key2}{$key3})) { 
-                            print "      <$key3>" . sanitizeData($HoH{$key}{$key2}{$key3},$format) . "</$key3>\n";
-                        } else {
-                            print "      <$key3>empty</$key3>\n";
-                        }
+                        print "      <$key3>" . sanitizeData($HoH{$key}{$key2}{$key3},$format) . "</$key3>\n";
                     }
                 }
             } else {
                 # if the element wasn't a hash we expect a scalar 
                 # so print
-                if (defined($HoH{$key}{$key2})) {
-                    print "    <$key2>" . sanitizeData($HoH{$key}{$key2},$format) . "</$key2>\n";
-                } else {
-                    print "    <$key2>empty</$key2>\n";
-                }
+                print "    <$key2>" . sanitizeData($HoH{$key}{$key2},$format) . "</$key2>\n";
             }
             # close the tag for the instance number
             if ($key2 =~ /\d+/) {
@@ -615,21 +610,13 @@ sub printCSV() {
                     # check if the element is a hash
                     if (ref($HoH{$key}{$key2}{$key3}) ne "HASH") {
                         # handle undefined element output
-                        if (defined($HoH{$key}{$key2}{$key3})) { 
-                            print '"' . sanitizeData($HoH{$key}{$key2}{$key3},$format) . '",';
-                        } else {
-                            print '"empty",';
-                        }
+                        print '"' . sanitizeData($HoH{$key}{$key2}{$key3},$format) . '",';
                     }
                 }
             } else {
                 # if the element wasn't a hash we expect a scalar 
                 # so print
-                if (defined($HoH{$key}{$key2})) {
-                    print '"' . sanitizeData($HoH{$key}{$key2},$format) . '",';
-                } else {
-                    print '"empty",';
-                }
+                print '"' . sanitizeData($HoH{$key}{$key2},$format) . '",';
             }
         }
     } 
