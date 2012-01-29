@@ -451,7 +451,7 @@ sub dpkgparse {
                 if ( $key =~ /package/ ) { 
                     $count++;
                     $HoH{'packages'}{$count}{$key} = $value;
-                    chomp($HoH{'packages'}{"installdate"}=`ls -l --time-style=long-iso $pkglist/$value.list | awk '{print \$6 " " \$7}'`);
+                    chomp($HoH{'packages'}{$count}{"installdate"}=`ls -l --time-style=long-iso $pkglist/$value.list | awk '{print \$6 " " \$7}'`);
                 } elsif ( $key =~ /version/ ) {
                     my ($ver, $rel) = split(/\-/, $value);                        
                     $HoH{'packages'}{$count}{"version"} = $ver;
