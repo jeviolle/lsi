@@ -447,14 +447,15 @@ sub dpkgparse {
             
             # check the line for the required field
             if ( $line =~ /^(Package|Version|Architecture|Maintainer|Description|Status):\s+(.*)$/ ) {
-                my ($key, $value) = ($1, $2);
-                if ( $key =~ /Package/ ) { 
+                my ($key, $value) = (lc($1), $2);
+                if ( $key =~ /package/ ) { 
                     $count++;
-                    chomp($HoH{'packages'}{"InstallDate"}=`ls -l --time-style=long-iso $pkglist/$value.list | awk '{print \$6 " " \$7}'`);
-                } elsif ( $key =~ /Version/ ) {
+                    $HoH{'packages'}{$count}{$key} = $value;
+                    chomp($HoH{'packages'}{"installdate"}=`ls -l --time-style=long-iso $pkglist/$value.list | awk '{print \$6 " " \$7}'`);
+                } elsif ( $key =~ /version/ ) {
                     my ($ver, $rel) = split(/\-/, $value);                        
-                    $HoH{'packages'}{$count}{"Version"} = $ver;
-                    $HoH{'packages'}{$count}{"Release"} = $rel;
+                    $HoH{'packages'}{$count}{"version"} = $ver;
+                    $HoH{'packages'}{$count}{"release"} = $rel;
                 } else {
                     $HoH{'packages'}{$count}{$key} = $value;
                 }
@@ -469,10 +470,10 @@ sub pkginfo {
     my $rc;
 
     # try and detect package managers
-    system("which rpm &> /dev/null");
+    system("which rpm > /dev/null 2>&1");
     my $rpm = $? >> 8;
 
-    system("which dpkg-query &> /dev/null");
+    system("which dpkg-query > /dev/null 2>&1");
     my $dpkg = $? >> 8;
 
     if ( $rpm == 0 ) {
@@ -511,7 +512,7 @@ sub sanitizeData($$) {
     my $format = $_[1];
 
     if ( !defined($data) ) { $data = "empty"; }
-    if ( $data eq " " ) { $data = "empty"; }
+    if ( ($data eq " ") || ($data eq "") ) { $data = "empty"; }
 
     if ( $format eq "XML" ) {
         $data =~ s/\</\&lt\;/g;
