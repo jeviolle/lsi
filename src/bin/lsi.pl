@@ -519,6 +519,7 @@ sub sanitizeData($$) {
         $data =~ s/\>/\&gt\;/g;
         $data =~ s/\'/\&apos\;/g;
         $data =~ s/\"/\&quot\;/g;
+        $data =~ s/\&/\&amp\;/g;
     } elsif ( $format eq "CSV" ) {
         $data =~ s/\"//g;
     }
