@@ -27,10 +27,12 @@ use warnings;
 use strict;
 use IO::Socket;
 use File::Basename;
+use POSIX qw/strftime/;
 
 # initialize host and port
 my $clientFile = dirname(__FILE__) . "/../etc/clients.conf";
-my $outputDir = "/tmp";
+my $outputDir = dirname(__FILE__) . "/../var/www/data";
+my $datetime = strftime('%Y%m%d%H%M', localtime);
 my @clients;
 my $line;
 
@@ -42,10 +44,15 @@ foreach my $client (@clients) {
   my ($host, $port) = split(',', $client);
   chomp($host, $port);
 
+  # if the host data directory doesn't exist, create it
+  if ( ! -d "$ouputDir/$host" ) {
+      `mkdir "$outputDir/$host"`;
+  }
+
   # create the socket, connect to the port
   my $remote = IO::Socket::INET->new( Proto => "tcp", PeerAddr => "$host", PeerPort => "$port" ) or die "Failed to connect to $host:$port - $!\n";
 
-  open(OF, '>', "$outputDir/$host") or die "Failed to open $outputDir/$host $!\n";
+  open(OF, '>', "$outputDir/$host/$datetime.xml") or die "Failed to open $outputDir/$host/$datetime.xml $!\n";
     while ($line = <$remote>) {
         print OF "$line";
     }
