@@ -395,7 +395,7 @@ sub rpmparse {
                 my ($key, $value) = (lc($1), $2);
                 if ( $key =~ /package/ ) { 
                     $count++;
-                    $HoH{'packages'}{$count}{$key} = $value;
+                    $HoH{'packages'}{$count}{'name'} = $value;
                 } elsif ( $key =~ /installdate/ ) {
                     my ($dow, $day, $month, $year, $time) = split(" ",$value);
                     my $mon = $month2num{ lc substr($month, 0, 3) };
@@ -450,7 +450,7 @@ sub dpkgparse {
                 my ($key, $value) = (lc($1), $2);
                 if ( $key =~ /package/ ) { 
                     $count++;
-                    $HoH{'packages'}{$count}{$key} = $value;
+                    $HoH{'packages'}{$count}{'name'} = $value;
                     chomp($HoH{'packages'}{$count}{"installdate"}=`ls -l --time-style=long-iso $pkglist/$value.list | awk '{print \$6 " " \$7}'`);
                 } elsif ( $key =~ /version/ ) {
                     my ($ver, $rel) = split(/\-/, $value);                        
