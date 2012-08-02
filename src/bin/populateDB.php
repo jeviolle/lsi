@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 #
-# lsiquery.php - script to query and ouput stored data
+# populateDB.php - script to query and ouput stored data
 #
 #    lsi - A collection of scripts and programs that allow for the gathering
 #    and reporting of Linux/Unix systems information.
@@ -22,8 +22,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-# source and connect to the database
-include ('includes/db-connect.inc');
+// Set the access info
+define ('DB_USER', 'lsi');
+define ('DB_PASSWD', 'lsi');
+define ('DB_HOST', 'localhost:/tmp/mysql.sock');
+define ('DB_NAME', 'lsi');
+
+// Setup the database connection.
+$dh = mysql_connect(DB_HOST, DB_USER, DB_PASSWD) OR die ('Error connecting to database: ' . mysql_error());
+mysql_select_db(DB_NAME) OR die ('Error connecting to table: ' . mysql_error());
+mysql_set_charset('utf8',$dh);
 
 # set timezone
 date_default_timezone_set('America/New_York');
