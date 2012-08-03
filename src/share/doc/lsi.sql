@@ -228,7 +228,7 @@ BEGIN
   IF EXISTS (SELECT id FROM bios_info WHERE id=(SELECT id FROM hosts WHERE hostname=host)) THEN
     UPDATE bios_info SET hostid=hostid,product=product,biosrev=biosrev,date=date WHERE id=(SELECT id FROM hosts WHERE hostname=host);
   ELSE
-    INSERT INTO bios_info (id,hostid,product,biosrev,date) VALUES ((SELECT id FROM hosts WHERE hostname=host),hostid,biosrev,product,date); 
+    INSERT INTO bios_info (id,hostid,product,biosrev,date) VALUES ((SELECT id FROM hosts WHERE hostname=host),hostid,product,biosrev,date); 
   END IF;
 END 
 $$
