@@ -7,12 +7,12 @@ LSI		A collection of scripts that allow
 		systems information.
 
 LSI(Linux Systems Information) includes scripts for reporting
-important aspects of managed computers systems. This includes
-hostname, network interface settings, hardware information, 
-software information. 
+important aspects of managed Linux systems. This includes
+information that is useful for asset management as well as 
+systems administration. 
 
 
-Contents:
+CONTENTS
   
    README		This file.
 
@@ -23,20 +23,38 @@ Contents:
 
    TODO			Works in progress or not in progress.
 
-   docs			Extra documentation for LSI
+   install.sh		Main installer script
 
-   src  		Various scripts used to gather specific information 
+   src/bin  		Various scripts used to gather and/or store information 
+   src/etc		Configuration files
+   src/share/docs	Extra documentation for LSI
 
-System Requirements:
+
+SYSTEM REQUIREMENTS
 
 Operating systems that should work: Ubuntu, Debian, Red Hat Enterprise Linux, CentOS
 
-Dependencies:
+
+DEPENDENCIES
 
 Client -
   Standard utilities such as xinetd, perl, awk ,sed, grep, libxml2 (xmllint), libxslt (xsltproc) etc. (so basically a working system).
 
-Known Issues:
+Server -
+  Same as the client. The only thing different is the Server will pull information from the clients and store tthe results in central location for processing.
+
+
+KNOWN ISSUES
 
 -hostid may not be properly populated as this was originally intended for Dell
 -hardware results maybe be inacurrate, read man dmidecode for more information
+
+
+FEATURES
+
+-can export data as either XML or CSV
+-can export either all systems information or the categories you choose; IE bios information, cpu information
+-provides an MySQL schema and script for importing XML data from directories into MySQL
+-by default it utilizes stunnel to encrypt data pulls from the lsi collector
+
+

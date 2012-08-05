@@ -1,3 +1,4 @@
 - Document dependencies 
 - Add instructions on how to add SQL schema or integrate into the installer
 - Have installer prompt for database connection information and populate on install
+- Let the user choose the type of installation (standalone, centralized, centralized w/ Mysql)
